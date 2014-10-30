@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="rootBox" minHeight="600.0" minWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="semisplay.ToppieFXMLCompanion">
+    <children>
+        <MenuBar VBox.vgrow="NEVER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                  <MenuItem mnemonicParsing="false" onAction="#fileOpen" text="Open File...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#fileSaveLatex" text="Save as Latex...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#fileClose" text="Quit">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Q" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                    </items>
+               <accelerator>
+                  <KeyCodeCombination alt="ANY" code="F" control="UP" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#editClear" text="Clear">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="C" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem><MenuItem mnemonicParsing="false" onAction="#editReset" text="Reset">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="R" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                    </items>
+               <accelerator>
+                  <KeyCodeCombination alt="ANY" code="E" control="UP" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                  <MenuItem mnemonicParsing="false" onAction="#helpAbout" text="About">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="A" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                    </items>
+               <accelerator>
+                  <KeyCodeCombination alt="ANY" code="H" control="UP" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <SplitPane dividerPositions="0.332378223495702" VBox.vgrow="ALWAYS">
+            <items>
+                <VBox minWidth="220.0">
+                    <children>
+                  <HBox spacing="10.0">
+                     <children>
+                        <ComboBox fx:id="classBox" minWidth="100.0" promptText="Set  tree class" HBox.hgrow="ALWAYS" />
+                        <Button ellipsisString="" minWidth="70.0" mnemonicParsing="false" onAction="#setClass" text="Class" textAlignment="CENTER" textOverrun="CLIP" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                        <HBox spacing="10.0">
+                            <children>
+                                <ComboBox fx:id="insertBox" editable="true" minWidth="100.0" promptText="One or more" HBox.hgrow="ALWAYS" />
+                                <Button ellipsisString="" minWidth="70.0" mnemonicParsing="false" onAction="#insert" text="Insert" textOverrun="CLIP" />
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <ComboBox fx:id="removeBox" editable="true" minWidth="100.0" promptText="One or more" HBox.hgrow="ALWAYS" />
+                        <Button ellipsisString="" minWidth="70.0" mnemonicParsing="false" onAction="#remove" text="Remove" textOverrun="CLIP" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="90.0" mnemonicParsing="false" onAction="#lookup" text="Lookup" textOverrun="CLIP" />
+                        <TextField fx:id="lookupField" minWidth="50.0" promptText="A key" />
+                        <Label fx:id="lookupLabel" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="50.0" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox><HBox spacing="10.0">
+<children>
+<Button ellipsisString="" minWidth="90.0" mnemonicParsing="false" onAction="#iterateUntil" text="Iterate until" textOverrun="CLIP" />
+<TextField fx:id="iterateField" minWidth="50.0" promptText="A key" />
+</children>
+<padding>
+<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+</padding>
+</HBox>
+                  <HBox maxWidth="100.0" minWidth="100.0" spacing="10.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="20.0" minWidth="100.0" text="Splay Limit" textAlignment="CENTER" textOverrun="CLIP">
+                           <padding>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </padding>
+                        </Label>
+                        <Slider fx:id="splayLimit" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" maxWidth="1.7976931348623157E308" min="-1.0" minWidth="110.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="-1.0" />
+                     </children>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </HBox><HBox maxWidth="100.0" minWidth="100.0" spacing="10.0">
+<children>
+<Label alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="20.0" minWidth="100.0" text="Undo / Redo" textAlignment="CENTER" textOverrun="CLIP">
+<padding>
+<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+</padding>
+</Label>
+<Slider fx:id="undoRedo" blockIncrement="1.0" majorTickUnit="1.0" max="0.0" maxWidth="1.7976931348623157E308" minWidth="110.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+</children>
+<padding>
+<Insets top="5.0" />
+</padding>
+</HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="130.0" mnemonicParsing="false" onAction="#isBinary" text="isBinarySearchTree" textOverrun="CLIP" />
+                        <Label fx:id="binaryLabel" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="60.0" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="130.0" mnemonicParsing="false" onAction="#isBalanced" text="isBalanced" textOverrun="CLIP" />
+                        <Label fx:id="balancedLabel" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="60.0" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="130.0" mnemonicParsing="false" onAction="#rebalance" text="Rebalance" textOverrun="CLIP" />
+                        <Label fx:id="balancedLabel1" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="60.0" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="100.0" mnemonicParsing="false" onAction="#getLargest" text="getLargest" textAlignment="CENTER" textOverrun="CLIP" />
+                        <Label fx:id="largestLabel" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="100.0" mnemonicParsing="false" onAction="#getSmallest" text="getSmallest" textOverrun="CLIP" />
+                        <Label fx:id="smallestLabel" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" textAlignment="CENTER" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="100.0" mnemonicParsing="false" onAction="#getDepth" text="getDepth" textAlignment="CENTER" textOverrun="CLIP" />
+                        <Label fx:id="depthLabel" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" textAlignment="CENTER" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="100.0" mnemonicParsing="false" onAction="#getSize" text="getSize" textOverrun="CLIP" />
+                        <Label fx:id="sizeLabel" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" textAlignment="CENTER" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button ellipsisString="" minWidth="100.0" mnemonicParsing="false" onAction="#updateStats" text="UpdateStats" textOverrun="CLIP" />
+                        <Button ellipsisString="" minWidth="95.0" mnemonicParsing="false" onAction="#resetStats" text="ResetStats" textOverrun="CLIP" />
+                     </children>
+<padding>
+<Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
+</padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label fx:id="smallestLabel1" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" text="Comparisons" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="comparisons" editable="false" minWidth="50.0" />
+                     </children>
+<padding>
+<Insets right="10.0" />
+</padding>
+                  </HBox><HBox spacing="10.0">
+<children>
+<Label alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" text="Constructed" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+<TextField fx:id="constructed" editable="false" minWidth="50.0" />
+</children>
+<padding>
+<Insets right="10.0" />
+</padding>
+</HBox><HBox spacing="10.0">
+<children>
+<Label alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" text="Deletions" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+<TextField fx:id="deletions" editable="false" minWidth="50.0" />
+</children>
+<padding>
+<Insets right="10.0" />
+</padding>
+</HBox><HBox spacing="10.0">
+<children>
+<Label alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" text="Duplicates" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+<TextField fx:id="duplicates" editable="false" minWidth="50.0" />
+</children>
+<padding>
+<Insets right="10.0" />
+</padding>
+</HBox><HBox spacing="10.0">
+<children>
+<Label alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" text="Insertions" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+<TextField fx:id="insertions" editable="false" minWidth="50.0" />
+</children>
+<padding>
+<Insets right="10.0" />
+</padding>
+</HBox><HBox spacing="10.0">
+<children>
+<Label alignment="CENTER" contentDisplay="CENTER" ellipsisString="" minHeight="25.0" minWidth="100.0" text="NotFounds" textOverrun="CLIP" HBox.hgrow="ALWAYS" />
+<TextField fx:id="notfounds" editable="false" minWidth="50.0" />
+</children>
+<padding>
+<Insets right="10.0" />
+</padding>
+</HBox>
+                    </children>
+               <padding>
+                  <Insets bottom="15.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+                </VBox>
+                <ScrollPane fx:id="scrollCanvas">
+                    <content>
+                        <Canvas fx:id="canvas" height="661.0" width="448.0" />
+                    </content>
+                </ScrollPane>
+            </items>
+        </SplitPane>
+    </children>
+</VBox>
