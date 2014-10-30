@@ -18,22 +18,35 @@ import static org.junit.Assert.*;
  * @author Laurens Martin
  */
 public class SemiSplayTest {
-    
+
+    private AbstractSplayTree instance;
+    private ArrayList<Key> values;
+
     public SemiSplayTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
+        instance = new SemiSplay();
+        values = new ArrayList();
+        values.add(new Key(10));
+        values.add(new Key(5));
+        values.add(new Key(15));
+        values.add(new Key(20));
+        values.add(new Key(25));
+        values.add(new Key(1));
+        values.add(new Key(11));
+        values.add(new Key(8));
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -44,23 +57,11 @@ public class SemiSplayTest {
     @Test
     public void testSetRoot() {
         System.out.println("setRoot");
-        Top root = new Top(new Key(15));
-        AbstractSplayTree instance = new SemiSplay();
+        Top root = new Top(values.get(0));
         instance.setRoot(root);
-        assertEquals(instance.getRoot(),root);
-    }
-
-    /**
-     * Test of setSplayLimit method, of class AbstractSplayTree.
-     */
-    @Test
-    public void testSetSplayLimit() {
-        System.out.println("setSplayLimit");
-        int limit = 0;
-        AbstractSplayTree instance = new SemiSplay();
-        instance.setSplayLimit(limit);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(instance.getRoot(), root);
+        instance.remove(values.get(0));
+        assertEquals(instance.getRoot(), null);
     }
 
     /**
@@ -69,12 +70,13 @@ public class SemiSplayTest {
     @Test
     public void testCopy() {
         System.out.println("copy");
-        AbstractSplayTree instance = new SemiSplay();
-        AbstractTree expResult = null;
-        AbstractTree result = instance.copy();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        for(int i=0;i<6;i++){
+            instance.insert(values.get(i));
+        }
+        AbstractTree copy = instance.copy();
+        for (Key value : values) {
+            assertEquals(instance.lookup(value),copy.lookup(value));
+        }
     }
 
     /**
@@ -83,12 +85,31 @@ public class SemiSplayTest {
     @Test
     public void testGetDepth() {
         System.out.println("getDepth");
-        AbstractSplayTree instance = new SemiSplay();
         int expResult = 0;
         int result = instance.getDepth();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.insert(values.get(0));
+        expResult = 0;
+        result = instance.getDepth();
+        assertEquals(expResult, result);
+        instance.insert(values.get(1));
+        expResult = 1;
+        result = instance.getDepth();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of getSize method, of class SemiSplay.
+     */
+    @Test
+    public void testGetSize() {
+        System.out.println("getSize");
+        for (Key value : values) {
+            instance.insert(value);
+        }
+        int expResult = 8;
+        int result = instance.getSize();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -97,26 +118,12 @@ public class SemiSplayTest {
     @Test
     public void testIsBinarySearchTree() {
         System.out.println("isBinarySearchTree");
-        AbstractTree instance = new SemiSplay();
-        boolean expResult = false;
+        for (int i = 0; i < 3; i++) {
+            instance.insert(values.get(i));
+        }
+        boolean expResult = true;
         boolean result = instance.isBinarySearchTree();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of isBalanced method, of class AbstractSplayTree.
-     */
-    @Test
-    public void testIsBalanced() {
-        System.out.println("isBalanced");
-        AbstractTree instance = new SemiSplay();
-        boolean expResult = false;
-        boolean result = instance.isBalanced();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -125,24 +132,13 @@ public class SemiSplayTest {
     @Test
     public void testRebalance() {
         System.out.println("rebalance");
-        AbstractTree instance = new SemiSplay();
+        for (Key value : values) {
+            instance.insert(value);
+        }
         instance.rebalance();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toArrayList method, of class AbstractSplayTree.
-     */
-    @Test
-    public void testToArrayList() {
-        System.out.println("toArrayList");
-        AbstractTree instance = new SemiSplay();
-        ArrayList<Key> expResult = null;
-        ArrayList<Key> result = instance.toArrayList();
+        int expResult = 3;
+        int result = instance.getDepth();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -151,12 +147,12 @@ public class SemiSplayTest {
     @Test
     public void testGetSmallest() {
         System.out.println("getSmallest");
-        AbstractTree instance = new SemiSplay();
-        Key expResult = null;
+        for (Key value : values) {
+            instance.insert(value);
+        }
+        Key expResult = values.get(5);
         Key result = instance.getSmallest();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -165,12 +161,12 @@ public class SemiSplayTest {
     @Test
     public void testGetLargest() {
         System.out.println("getLargest");
-        AbstractTree instance = new SemiSplay();
-        Key expResult = null;
+        for (Key value : values) {
+            instance.insert(value);
+        }
+        Key expResult = values.get(4);
         Key result = instance.getLargest();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -179,13 +175,15 @@ public class SemiSplayTest {
     @Test
     public void testLookup() {
         System.out.println("lookup");
-        Key key = null;
-        AbstractTree instance = new SemiSplay();
-        boolean expResult = false;
-        boolean result = instance.lookup(key);
+        for (Key value : values) {
+            instance.insert(value);
+        }
+        boolean expResult = true;
+        boolean result = instance.lookup(values.get(1));
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        expResult = false;
+        result = instance.lookup(new Key(50));
+        assertEquals(expResult, result);
     }
 
     /**
@@ -194,13 +192,16 @@ public class SemiSplayTest {
     @Test
     public void testInsert() {
         System.out.println("insert");
-        Key key = null;
-        AbstractTree instance = new SemiSplay();
-        boolean expResult = false;
-        boolean result = instance.insert(key);
+        ArrayList<Boolean> result = new ArrayList();
+        ArrayList<Boolean> expResult = new ArrayList();
+        for (Key value : values) {
+            result.add(instance.insert(value));
+            expResult.add(true);
+        }
+        boolean result2 = instance.insert(new Key(1));
+        boolean expResult2 = false;
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult2, result2);
     }
 
     /**
@@ -209,43 +210,14 @@ public class SemiSplayTest {
     @Test
     public void testRemove() {
         System.out.println("remove");
-        Key key = null;
-        AbstractTree instance = new SemiSplay();
-        boolean expResult = false;
-        boolean result = instance.remove(key);
+        for (int i = 0; i < 8; i++) {
+            instance.insert(values.get(i));
+        }
+        boolean expResult = true;
+        boolean result = instance.remove(values.get(2));
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of iterator method, of class AbstractSplayTree.
-     */
-    @Test
-    public void testIterator() {
-        System.out.println("iterator");
-        AbstractTree instance = new SemiSplay();
-        TreeIterator<Key> expResult = null;
-        TreeIterator<Key> result = instance.iterator();
+        expResult = false;
+        result = instance.remove(values.get(2));
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
-    /**
-     * Test of splay method, of class AbstractSplayTree.
-     */
-    @Test
-    public void testSplay() {
-        System.out.println("splay");
-        TopStack path = null;
-        AbstractTree instance = new SemiSplay();
-        TopStack expResult = null;
-        TopStack result = instance.splay(path);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    
 }

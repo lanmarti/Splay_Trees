@@ -177,6 +177,7 @@ public class ToppieFXMLCompanion implements Initializable {
             try {
                 Key k = tree.getLargest();
                 s = k.toString();
+                draw();
             } catch (Exception ex) {
                 System.err.println("Exception " + ex);
                 s = "Exception";
@@ -194,6 +195,7 @@ public class ToppieFXMLCompanion implements Initializable {
             try {
                 Key k = tree.getSmallest();
                 s = k.toString();
+                draw();
             } catch (Exception ex) {
                 System.err.println("Exception " + ex);
                 s = "Exception";
