@@ -165,7 +165,6 @@ public abstract class AbstractSplayTree extends AbstractTree {
 
     @Override
     public boolean insert(Key key) {
-        /* try three */
         if (root != null) {
             TopStack path = getPath(key);
             int branch = path.peek().compareTo(key);

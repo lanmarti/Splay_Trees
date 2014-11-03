@@ -25,7 +25,6 @@ public class SemiSplay extends AbstractSplayTree {
         }
         this.size = clone.getSize();
         this.limit = clone.limit;
-        // DEPTH
     }
 
     @Override
@@ -96,13 +95,8 @@ public class SemiSplay extends AbstractSplayTree {
             }
 
             /* pad opschonen */
-            // System.out.println("Popping first on path: " + path.peek().getKey());
             path.pop();
-
-            // System.out.println("Popping second on path: " + path.peek().getKey());
             path.pop();
-
-            // System.out.println("Swapping third on path: " + path.peek().getKey() + " with new top:" + top.getKey());
             path.swap(top);
         }
         return path;
