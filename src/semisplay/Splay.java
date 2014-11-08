@@ -21,14 +21,15 @@ public class Splay extends AbstractSplayTree {
 
     // HERWERK DIT toppen klonen!
     private Splay(Splay clone) {
-        this.root = clone.getRoot();
+        if (clone.getRoot() != null) {
+            this.root = clone.getRoot().copy();
+        }
         this.size = clone.getSize();
         this.limit = clone.limit;
     }
 
     @Override
     public TopStack splay(TopStack path) {
-        Top top;
         if (!path.hasParent()) {
             path.clear();
             return path;
@@ -48,7 +49,6 @@ public class Splay extends AbstractSplayTree {
             root = current;
             path.clear();
         } else {
-            // identiek aan semisplay methode
             Top grandparent = path.getGrandParent();
 
             if (current.compareTop(parent) == -1) {
@@ -58,9 +58,10 @@ public class Splay extends AbstractSplayTree {
                  *  A
                  */
                 if (parent.compareTop(grandparent) == -1) {
+                    parent.setLeft(current.getRight());
                     grandparent.setLeft(parent.getRight());
+                    current.setRight(parent);
                     parent.setRight(grandparent);
-                    top = parent;
                 } /* situatie 2:
                  *  A
                  *      C
@@ -70,7 +71,6 @@ public class Splay extends AbstractSplayTree {
                     parent.setLeft(current.getRight());
                     current.setLeft(grandparent);
                     current.setRight(parent);
-                    top = current;
                 }
             } else {
                 /* situatie 3:
@@ -83,34 +83,33 @@ public class Splay extends AbstractSplayTree {
                     grandparent.setLeft(current.getRight());
                     current.setLeft(parent);
                     current.setRight(grandparent);
-                    top = current;
                 } /*  situatie 4:
                  *  A
                  *      B
                  *          C
                  */ else {
                     grandparent.setRight(parent.getLeft());
+                    parent.setRight(current.getLeft());
                     parent.setLeft(grandparent);
-                    top = parent;
+                    current.setLeft(parent);
                 }
             }
-
             /* aanpassen van root indien nodig */
             if (grandparent == root) {
-                root = top;
+                root = current;
                 path.clear();
             } /* referentie naar de zojuist gesplayede deelboom aanpassen */ else {
                 Top ggParent = path.get(path.size() - 4);
-                if (ggParent.compareTop(top) == -1) {
-                    ggParent.setRight(top);
+                if (ggParent.compareTop(current) == -1) {
+                    ggParent.setRight(current);
                 } else {
-                    ggParent.setLeft(top);
+                    ggParent.setLeft(current);
                 }
 
                 /* pad opschonen */
                 path.pop();
                 path.pop();
-                path.swap(top);
+                path.swap(current);
             }
         }
         return path;

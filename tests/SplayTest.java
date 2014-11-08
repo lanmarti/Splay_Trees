@@ -16,12 +16,12 @@ import static org.junit.Assert.*;
  *
  * @author Laurens Martin
  */
-public class SemiSplayTest {
+public class SplayTest {
 
     private AbstractSplayTree instance;
     private ArrayList<Key> values;
 
-    public SemiSplayTest() {
+    public SplayTest() {
     }
 
     @BeforeClass
@@ -34,7 +34,7 @@ public class SemiSplayTest {
 
     @Before
     public void setUp() {
-        instance = new SemiSplay();
+        instance = new Splay();
         values = new ArrayList();
         values.add(new Key(10));
         values.add(new Key(5));
@@ -224,13 +224,14 @@ public class SemiSplayTest {
     public void testSplay() {
         System.out.println("splay");
         instance.insert(values.get(0));
-        instance.insert(values.get(2));
-        Key expResult = values.get(0);
+        instance.insert(values.get(1));
+        Key expResult = values.get(1);
         Key result = instance.getRoot().getKey();
         assertEquals(expResult, result);
-        instance.insert(values.get(3));
-        assertEquals(1, instance.getDepth());
-        result = instance.getRoot().getLeft().getKey();
+        instance.insert(values.get(2));
+        assertEquals(2, instance.getDepth());
+        expResult = values.get(2);
+        result = instance.getRoot().getKey();
         assertEquals(expResult, result);
     }
 }
