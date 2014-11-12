@@ -14,12 +14,18 @@ public class Splay extends AbstractSplayTree {
     public Splay() {
     }
 
+    /**
+     * @return A new and complete deep-copy of the current tree. This method
+     * must be implemented first, in order to use Toppie!
+     */
     @Override
     public AbstractTree copy() {
         return new Splay(this);
     }
 
-    // HERWERK DIT toppen klonen!
+    /**
+     * Clone the given tree.
+     */
     private Splay(Splay clone) {
         if (clone.getRoot() != null) {
             this.root = clone.getRoot().copy();
@@ -28,6 +34,11 @@ public class Splay extends AbstractSplayTree {
         this.limit = clone.limit;
     }
 
+    /**
+     * Splay the given path according to the splay algorithm.
+     *
+     * @return path from root to top of splayed subtree.
+     */
     @Override
     public TopStack splay(TopStack path) {
         if (!path.hasParent()) {
@@ -94,11 +105,11 @@ public class Splay extends AbstractSplayTree {
                     current.setLeft(parent);
                 }
             }
-            /* aanpassen van root indien nodig */
+            /* adjust root if necessary */
             if (grandparent == root) {
                 root = current;
                 path.clear();
-            } /* referentie naar de zojuist gesplayede deelboom aanpassen */ else {
+            } /* adjust grandgrandparent child reference */ else {
                 Top ggParent = path.get(path.size() - 4);
                 if (ggParent.compareTop(current) == -1) {
                     ggParent.setRight(current);
@@ -106,7 +117,7 @@ public class Splay extends AbstractSplayTree {
                     ggParent.setLeft(current);
                 }
 
-                /* pad opschonen */
+                /* adjust path */
                 path.pop();
                 path.pop();
                 path.swap(current);

@@ -16,16 +16,22 @@ import java.util.List;
  * @author Laurens Martin
  */
 public class Full extends AbstractSplayTree {
-    private final ArrayList<Top> leaves = new ArrayList();
 
     public Full() {
     }
 
+    /**
+     * @return A new and complete deep-copy of the current tree. This method
+     * must be implemented first, in order to use Toppie!
+     */
     @Override
     public AbstractTree copy() {
         return new Full(this);
     }
 
+    /**
+     * Clone the given tree.
+     */
     private Full(Full clone) {
         if (clone.getRoot() != null) {
             root = clone.getRoot().copy();
@@ -34,16 +40,26 @@ public class Full extends AbstractSplayTree {
         limit = clone.limit;
     }
 
+    /**
+     * Splay the given path according to the full semi-splay algorithm. Store
+     * the exterior nodes in a linked list, rebalance the path and add the
+     * exterior nodes back to the newly balanced path.
+     *
+     * @return an empty path.
+     */
     @Override
     public TopStack splay(TopStack path) {
         if (!path.hasGrandParent()) {
             path.clear();
             return path;
         }
+        ArrayList<Top> leaves = new ArrayList();
         ArrayList<Key> values = new ArrayList<>();
         Top parent = path.pop();
         values.add(parent.getKey());
         LinkedList<Top> subtree = new LinkedList<>();
+
+        // add exterior nodes in natural order to a deque
         subtree.add(parent.getLeft());
         subtree.add(parent.getRight());
         while (!path.isEmpty()) {
@@ -57,11 +73,11 @@ public class Full extends AbstractSplayTree {
             }
         }
 
-        // balance
+        // balance the path
         Collections.sort(values);
-        root = balancePath(values);
-        
-        // plak buitenbomen
+        root = balancePath(values, leaves);
+
+        // add the exterior nodes back to the balanced path
         Iterator it = subtree.iterator();
         for (Top leaf : leaves) {
             if (!leaf.hasLeft()) {
@@ -72,24 +88,28 @@ public class Full extends AbstractSplayTree {
             }
         }
 
-        leaves.clear();
         path.clear();
         return path;
     }
-    
-    private Top balancePath(List<Key> values){
+
+    /**
+     * create a balanced tree out of the given values, add nodes with one or no
+     * children to the leaves list for usage in the splay method.
+     *
+     * @return the root of the balanced tree
+     */
+    private Top balancePath(List<Key> values, ArrayList<Top> leaves) {
         if (values.isEmpty()) {
             return null;
         } else {
             int middle = values.size() / 2;
             Top top = new Top(values.get(middle));
-            top.setLeft(balancePath(values.subList(0, middle)));
-            top.setRight(balancePath(values.subList(middle + 1, values.size())));
-            if (!top.hasRight() || !top.hasLeft()){
+            top.setLeft(balancePath(values.subList(0, middle), leaves));
+            top.setRight(balancePath(values.subList(middle + 1, values.size()), leaves));
+            if (!top.hasRight() || !top.hasLeft()) {
                 leaves.add(top);
             }
             return top;
         }
     }
-
 }

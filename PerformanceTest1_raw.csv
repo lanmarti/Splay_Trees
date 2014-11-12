@@ -1,0 +1,12 @@
+;Total time;Add time;Contains Time;Insertions;Constructed tops;Comparisons
+tests/testfile
+
+class semisplay.Splay
+;143;117;26;10000;10000;999759
+
+class semisplay.SemiSplay
+;74;40;34;10000;10000;864807
+
+class semisplay.Full
+;266;159;107;10000;421219;609049
+

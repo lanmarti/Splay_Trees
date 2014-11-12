@@ -20,6 +20,7 @@ public abstract class AbstractSplayTree extends AbstractTree {
     protected int limit = -1;
     protected int size = 0;
 
+    /** @return A reference to the root node of the tree. */
     @Override
     public Top getRoot() {
         return root;
@@ -30,6 +31,10 @@ public abstract class AbstractSplayTree extends AbstractTree {
         this.root = root;
     }
 
+    /** Set a limitation on the number of splay operations
+     * which are done for each lookup/insert/remove operation.
+     * @param limit Limit splays if >= 0, unlimited splays if negative.
+     * By default the number of splay operations is not limited (-1). */
     @Override
     public void setSplayLimit(int limit) {
         this.limit = limit;
@@ -38,11 +43,14 @@ public abstract class AbstractSplayTree extends AbstractTree {
     @Override
     public abstract AbstractTree copy();
 
+    /** @return The depth of the tree. 
+     * utitlize the recursive helpfunction maxDepth to calculate this. */
     @Override
     public int getDepth() {
         return maxDepth(root);
     }
 
+    /** @return the depth of the subtree with this top as root. */
     private int maxDepth(Top top) {
         if (top == null || (!top.hasLeft() && !top.hasRight())) {
             return 0;
@@ -57,15 +65,15 @@ public abstract class AbstractSplayTree extends AbstractTree {
         }
     }
 
+    /** @return The total number of top-nodes in the tree. */
     @Override
     public int getSize() {
         return size;
     }
 
+    /** Does the current tree conform to the formal specification of a BST? */
     @Override
     public boolean isBinarySearchTree() {
-        // controleer de waarden
-
         ArrayList<Key> tree = toArrayList();
         for (int i = 0; i < tree.size() - 1; i++) {
             if (tree.get(i).compareTo(tree.get(i + 1)) != -1) {
@@ -74,7 +82,8 @@ public abstract class AbstractSplayTree extends AbstractTree {
         }
         return true;
     }
-
+    
+    /** Check whether the current tree is a balanced tree. */
     @Override
     public boolean isBalanced() {
         if (root != null) {
@@ -85,7 +94,9 @@ public abstract class AbstractSplayTree extends AbstractTree {
         }
         return true;
     }
-
+    
+    /** Rebalance the current tree. Use the recursive balanceKeys function
+     * to create a balanced tree from sorted values. */
     @Override
     public void rebalance() {
         if (!isBalanced()) {
@@ -94,6 +105,8 @@ public abstract class AbstractSplayTree extends AbstractTree {
         }
     }
 
+    /** Recusively balance the given list of sorted values into a tree
+     * @return the middle element of the list. */
     private Top balanceKeys(List<Key> values) {
         if (values.isEmpty()) {
             return null;
@@ -105,7 +118,10 @@ public abstract class AbstractSplayTree extends AbstractTree {
             return top;
         }
     }
-
+    
+    /** Give all elements of the tree in natural order (in-order).
+     *  For a definition see theorem 16.1.5 in the course notes of AD1.
+     *  @return ArrayList with all keys. */
     @Override
     public ArrayList<Key> toArrayList() {
         ArrayList<Key> list = new ArrayList<>();
@@ -115,10 +131,10 @@ public abstract class AbstractSplayTree extends AbstractTree {
         return list;
     }
 
+    /** Return the smallest key in the tree.
+     * @return The smallest key if the tree was non-empty, else null. */
     @Override
     public Key getSmallest() {
-        // meest linker kind
-        // get root, while (left) take left
         Top top = root;
         TopStack stack = new TopStack();
         if (top != null) {
@@ -133,10 +149,10 @@ public abstract class AbstractSplayTree extends AbstractTree {
         return null;
     }
 
+    /** Return the largest key in the tree.
+     * @return The largest key if the tree was non-empty, else null. */
     @Override
     public Key getLargest() {
-        // meest rechterkind
-        // get root, while (right) take right
         Top top = root;
         TopStack stack = new TopStack();
         if (top != null) {
@@ -151,6 +167,8 @@ public abstract class AbstractSplayTree extends AbstractTree {
         return null;
     }
 
+    /** Lookup the given Key in the current tree.
+     * @return True if and only if the key was found. */
     @Override
     public boolean lookup(Key key) {
         TopStack path = getPath(key);
@@ -163,6 +181,8 @@ public abstract class AbstractSplayTree extends AbstractTree {
         return true;
     }
 
+    /** Insert a new Key, but avoid duplicates.
+     * @return True if insertion succeeded (the key is not a duplicate). */
     @Override
     public boolean insert(Key key) {
         if (root != null) {
@@ -190,6 +210,8 @@ public abstract class AbstractSplayTree extends AbstractTree {
         return true;
     }
 
+    /** Remove the given Key from the tree.
+     * @return True if and only if the key was found and deleted. */
     @Override
     public boolean remove(Key key) {
         TopStack path = getPath(key);
@@ -249,6 +271,7 @@ public abstract class AbstractSplayTree extends AbstractTree {
         }
     }
 
+    /** @return A new iterator over the current tree. */
     @Override
     public TreeIterator<Key> iterator() {
         return new MyTreeIterator();
@@ -256,6 +279,11 @@ public abstract class AbstractSplayTree extends AbstractTree {
 
     abstract TopStack splay(TopStack path);
 
+    /** Look for a top with the given value in the tree
+     * @return if the key can be found in the tree: the path from root to key.
+     * If the key can't be found, return the path from root to the hypothetical
+     * parent.
+     */
     private TopStack getPath(Key key) {
         if (root == null) {
             return null;
@@ -287,6 +315,10 @@ public abstract class AbstractSplayTree extends AbstractTree {
         return stack;
     }
 
+    /** Limit the amount of times the splay operation can be performed
+     * consecutively. Call this whenever there needs to be splayed.
+     * @return the path after splaying operation is complete.
+     */
     private TopStack splayCounter(TopStack path) {
         int count = 0;
         while (!path.isEmpty() && count != limit) {
@@ -296,6 +328,7 @@ public abstract class AbstractSplayTree extends AbstractTree {
         return path;
     }
 
+    /** Interior class for the TreeIterator */
     protected class MyTreeIterator implements TreeIterator<Key> {
 
         protected Top current;
@@ -327,7 +360,6 @@ public abstract class AbstractSplayTree extends AbstractTree {
         @Override
         public Key next() {
             if (root == null) {
-                // AANPASSEN!!
                 return null;
             }
             if (current == null) {

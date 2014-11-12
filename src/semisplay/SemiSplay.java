@@ -11,6 +11,10 @@ package semisplay;
  */
 public class SemiSplay extends AbstractSplayTree {
 
+    /**
+     * @return A new and complete deep-copy of the current tree. This method
+     * must be implemented first, in order to use Toppie!
+     */
     @Override
     public AbstractTree copy() {
         return new SemiSplay(this);
@@ -19,6 +23,9 @@ public class SemiSplay extends AbstractSplayTree {
     public SemiSplay() {
     }
 
+    /**
+     * Clone the given tree.
+     */
     private SemiSplay(SemiSplay clone) {
         if (clone.getRoot() != null) {
             this.root = clone.getRoot().copy();
@@ -27,6 +34,12 @@ public class SemiSplay extends AbstractSplayTree {
         this.limit = clone.limit;
     }
 
+    /**
+     * Splay the given path according to the standard semi-splay algorithm.
+     *
+     * @return path from root to top of splayed subtree or an empty path if the
+     * path has less than 3 nodes.
+     */
     @Override
     public TopStack splay(TopStack path) {
         Top top;
@@ -82,11 +95,11 @@ public class SemiSplay extends AbstractSplayTree {
             }
         }
 
-        /* aanpassen van root indien nodig */
+        /* adjust root if necessary */
         if (grandparent == root) {
             root = top;
             path.clear();
-        } /* referentie naar de zojuist gesplayede deelboom aanpassen */ else {
+        } /* adjust grandgrandparent child reference */ else {
             Top ggParent = path.get(path.size() - 4);
             if (ggParent.compareTop(top) == -1) {
                 ggParent.setRight(top);
@@ -94,7 +107,7 @@ public class SemiSplay extends AbstractSplayTree {
                 ggParent.setLeft(top);
             }
 
-            /* pad opschonen */
+            /* adjust path */
             path.pop();
             path.pop();
             path.swap(top);
