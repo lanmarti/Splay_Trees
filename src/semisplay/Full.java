@@ -7,6 +7,7 @@ package semisplay;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,9 +55,9 @@ public class Full extends AbstractSplayTree {
             return path;
         }
         ArrayList<Top> leaves = new ArrayList();
-        ArrayList<Key> values = new ArrayList<>();
+        ArrayList<Top> nodes = new ArrayList<>();
         Top parent = path.pop();
-        values.add(parent.getKey());
+        nodes.add(parent);
         LinkedList<Top> subtree = new LinkedList<>();
 
         // add exterior nodes in natural order to a deque
@@ -65,7 +66,7 @@ public class Full extends AbstractSplayTree {
         while (!path.isEmpty()) {
             Top child = parent;
             parent = path.pop();
-            values.add(parent.getKey());
+            nodes.add(parent);
             if (parent.getLeft() != child) {
                 subtree.addFirst(parent.getLeft());
             } else {
@@ -74,8 +75,8 @@ public class Full extends AbstractSplayTree {
         }
 
         // balance the path
-        Collections.sort(values);
-        root = balancePath(values, leaves);
+        Collections.sort(nodes, (Top t1, Top t2) -> t1.compareTo(t2.getKey()));
+        root = balancePath(nodes, leaves);
 
         // add the exterior nodes back to the balanced path
         Iterator it = subtree.iterator();
@@ -98,14 +99,14 @@ public class Full extends AbstractSplayTree {
      *
      * @return the root of the balanced tree
      */
-    private Top balancePath(List<Key> values, ArrayList<Top> leaves) {
-        if (values.isEmpty()) {
+    private Top balancePath(List<Top> nodes, ArrayList<Top> leaves) {
+        if (nodes.isEmpty()) {
             return null;
         } else {
-            int middle = values.size() / 2;
-            Top top = new Top(values.get(middle));
-            top.setLeft(balancePath(values.subList(0, middle), leaves));
-            top.setRight(balancePath(values.subList(middle + 1, values.size()), leaves));
+            int middle = nodes.size() / 2;
+            Top top = nodes.get(middle);
+            top.setLeft(balancePath(nodes.subList(0, middle), leaves));
+            top.setRight(balancePath(nodes.subList(middle + 1, nodes.size()), leaves));
             if (!top.hasRight() || !top.hasLeft()) {
                 leaves.add(top);
             }
