@@ -17,10 +17,8 @@ import semisplay.NumberReader;
  */
 public class PerformanceTest1 {
 
-    public static void main(String[] args) {
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter("PerformanceTest1_raw.csv", "UTF-8");
+    public void runTests() {
+        try (PrintWriter writer = new PrintWriter("PerformanceTest1_raw.csv", "UTF-8")) {
             writer.println(";Total time;Add time;Contains Time;"
                     + "Insertions;Constructed tops;Comparisons");
             String file = "tests/testfile";
@@ -35,24 +33,20 @@ public class PerformanceTest1 {
             writer.close();
         } catch (Exception e) {
             System.err.println("Er ging iets fout bij het testen.");
-        } finally {
-            if (writer != null) {
-                writer.close();
-            }
         }
     }
     
-    private static void printStatistics(String file, AbstractTree tree, PrintWriter writer){
+    private void printStatistics(String file, AbstractTree tree, PrintWriter writer){
+        AbstractTree.resetStatistics();
         writer.println(tree.getClass());
         long[] results = timeTest(file, tree);
         writer.println(";" + results[0] + ";" + results[1] + ";" + results[2] + 
                 ";" + AbstractTree.getInsertions() + ";" + AbstractTree.getConstructed()
                 + ";" + AbstractTree.getComparisons());
-        AbstractTree.resetStatistics();
         writer.println();
     }
     
-    private static long[] timeTest(String file, AbstractTree tree){
+    private long[] timeTest(String file, AbstractTree tree){
         long[] results = new long[3];
         NumberReader reader = new NumberReader(file);
         System.gc();

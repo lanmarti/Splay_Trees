@@ -1,0 +1,10 @@
+;Insertion time;Insertions;Constructed tops;Comparisons
+Splay
+;97;50000;50000;3100362
+
+SemiSplay
+;51;50000;50000;2807808
+
+Full
+;306;50000;50000;5974580
+
