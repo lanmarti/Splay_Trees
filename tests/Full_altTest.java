@@ -5,6 +5,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,12 +20,12 @@ import static org.junit.Assert.*;
  *
  * @author Laurens Martin
  */
-public class SemiSplayTest {
+public class Full_altTest {
 
     private AbstractSplayTree instance;
     private ArrayList<Key> values;
 
-    public SemiSplayTest() {
+    public Full_altTest() {
     }
 
     @BeforeClass
@@ -36,7 +38,7 @@ public class SemiSplayTest {
 
     @Before
     public void setUp() {
-        instance = new SemiSplay();
+        instance = new Full_alt();
         values = new ArrayList();
         values.add(new Key(10));
         values.add(new Key(5));
@@ -71,12 +73,12 @@ public class SemiSplayTest {
     @Test
     public void testCopy() {
         System.out.println("copy");
-        for (int i = 0; i < 6; i++) {
+        for(int i=0;i<6;i++){
             instance.insert(values.get(i));
         }
         AbstractTree copy = instance.copy();
         for (Key value : values) {
-            assertEquals(instance.lookup(value), copy.lookup(value));
+            assertEquals(instance.lookup(value),copy.lookup(value));
         }
     }
 
@@ -221,7 +223,7 @@ public class SemiSplayTest {
         result = instance.remove(values.get(2));
         assertEquals(expResult, result);
     }
-
+    
     @Test
     public void testSplay() {
         System.out.println("splay");
@@ -231,7 +233,7 @@ public class SemiSplayTest {
         Key result = instance.getRoot().getKey();
         assertEquals(expResult, result);
         instance.insert(values.get(3));
-        assertEquals(1, instance.getDepth());
+        assertEquals(1,instance.getDepth());
         result = instance.getRoot().getLeft().getKey();
         assertEquals(expResult, result);
     }

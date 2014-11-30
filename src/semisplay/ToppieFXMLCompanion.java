@@ -280,7 +280,7 @@ public class ToppieFXMLCompanion implements Initializable {
             while (it.hasNext()) {
                 Key k = it.next();
                 System.out.printf("%s ", k.toString());
-                if (key != null && k.compareTo(key) != Key.LT) {
+                if (key != null && k.compareTo(key) == Key.EQ) {
                     found = true;
                     System.out.println("reset.");
                     it.reset();
@@ -308,15 +308,15 @@ public class ToppieFXMLCompanion implements Initializable {
     }
 
     /** Update a particular statistic in the GUI. */
-    private void upStat(TextField stat, int val) {
+    private void upStat(TextField stat, long val) {
         boolean gotPrevious = false;
-        int previous = 0;
+        long previous = 0;
         try {
             String text = stat.getText();
             if ( ! text.isEmpty()) {
                 String spl[] = text.split("\\s+");
                 if (spl.length > 0) {
-                    previous = Integer.decode(spl[0]);
+                    previous = Long.decode(spl[0]);
                     gotPrevious = true;
                 }
             }

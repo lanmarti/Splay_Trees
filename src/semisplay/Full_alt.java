@@ -13,11 +13,14 @@ import java.util.List;
 
 /**
  * This implementation of Full Semi Splay creates new Tops when rebalancing.
+ *
  * @author Laurens Martin
  */
 public class Full_alt extends AbstractSplayTree {
 
+
     public Full_alt() {
+        super();
     }
 
     /**
@@ -33,6 +36,7 @@ public class Full_alt extends AbstractSplayTree {
      * Clone the given tree.
      */
     private Full_alt(Full_alt clone) {
+        super();
         if (clone.getRoot() != null) {
             root = clone.getRoot().copy();
         }
@@ -42,7 +46,7 @@ public class Full_alt extends AbstractSplayTree {
 
     /**
      * Splay the given path according to the full semi-splay algorithm. Store
-     * the exterior nodes in a linked list, rebalance the path and add the
+     * the exterior nodes in two lists, rebalance the path and add the
      * exterior nodes back to the newly balanced path.
      *
      * @return an empty path.
@@ -53,41 +57,53 @@ public class Full_alt extends AbstractSplayTree {
             path.clear();
             return path;
         }
-        ArrayList<Top> leaves = new ArrayList();
+        ArrayList<Top> leaves = new ArrayList<>();
         ArrayList<Key> values = new ArrayList<>();
+        List<Top> left_subtrees = new ArrayList<>();
+        List<Top> right_subtrees = new ArrayList<>();
+        
         Top parent = path.pop();
         values.add(parent.getKey());
-        LinkedList<Top> subtree = new LinkedList<>();
 
-        // add exterior nodes in natural order to a deque
-        subtree.add(parent.getLeft());
-        subtree.add(parent.getRight());
+        // add exterior nodes in natural order to lists
+        left_subtrees.add(parent.getLeft());
+        right_subtrees.add(parent.getRight());
         while (!path.isEmpty()) {
             Top child = parent;
             parent = path.pop();
             values.add(parent.getKey());
             if (parent.getLeft() != child) {
-                subtree.addFirst(parent.getLeft());
+                left_subtrees.add(parent.getLeft());
             } else {
-                subtree.add(parent.getRight());
+                right_subtrees.add(parent.getRight());
             }
         }
 
         // balance the path
         Collections.sort(values);
-        root = balancePath(values, leaves);
+        root = balancePath(values,leaves);
 
         // add the exterior nodes back to the balanced path
-        Iterator it = subtree.iterator();
+        int i = left_subtrees.size() - 1;
+        int j = 0;
         for (Top leaf : leaves) {
             if (!leaf.hasLeft()) {
-                leaf.setLeft((Top) it.next());
+                if (i >= 0) {
+                    leaf.setLeft((Top) left_subtrees.get(i--));
+                } else {
+                    leaf.setLeft((Top) right_subtrees.get(j++));
+                }
             }
             if (!leaf.hasRight()) {
-                leaf.setRight((Top) it.next());
+                if (i >= 0) {
+                    leaf.setRight((Top) left_subtrees.get(i--));
+                } else {
+                    leaf.setRight((Top) right_subtrees.get(j++));
+                }
             }
         }
 
+        leaves.clear();
         path.clear();
         return path;
     }
@@ -98,14 +114,14 @@ public class Full_alt extends AbstractSplayTree {
      *
      * @return the root of the balanced tree
      */
-    private Top balancePath(List<Key> values, ArrayList<Top> leaves) {
+    private Top balancePath(List<Key> values,List<Top> leaves) {
         if (values.isEmpty()) {
             return null;
         } else {
             int middle = values.size() / 2;
             Top top = new Top(values.get(middle));
-            top.setLeft(balancePath(values.subList(0, middle), leaves));
-            top.setRight(balancePath(values.subList(middle + 1, values.size()), leaves));
+            top.setLeft(balancePath(values.subList(0, middle),leaves));
+            top.setRight(balancePath(values.subList(middle + 1, values.size()),leaves));
             if (!top.hasRight() || !top.hasLeft()) {
                 leaves.add(top);
             }

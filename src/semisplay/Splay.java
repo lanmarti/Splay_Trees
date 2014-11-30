@@ -12,6 +12,7 @@ package semisplay;
 public class Splay extends AbstractSplayTree {
 
     public Splay() {
+        super();
     }
 
     /**
@@ -27,6 +28,7 @@ public class Splay extends AbstractSplayTree {
      * Clone the given tree.
      */
     private Splay(Splay clone) {
+        super();
         if (clone.getRoot() != null) {
             this.root = clone.getRoot().copy();
         }

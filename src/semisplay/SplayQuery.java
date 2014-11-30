@@ -62,8 +62,11 @@ import java.util.concurrent.ThreadLocalRandom;
  * Run long performance tests on splay trees.
  */
 public class SplayQuery {
+
     // long for insertion time
-    private long timer;
+
+    private long insertionTimer;
+    private long lookupTimer;
 
     // The random number generator.
     private final ThreadLocalRandom rand;
@@ -92,9 +95,8 @@ public class SplayQuery {
     private double percentQuotient;
 
     /**
-     * The degree of biasedness.
-     * For 8020 this is in the range [1,infinity].
-     * For ZIPF this is in the range [0,1].
+     * The degree of biasedness. For 8020 this is in the range [1,infinity]. For
+     * ZIPF this is in the range [0,1].
      */
     private double ongelijkmatigheid;
 
@@ -105,8 +107,8 @@ public class SplayQuery {
         // ThreadLocalRandom is very fast.
         rand = ThreadLocalRandom.current();
     }
-    
-    public String runQuery(String args[]){
+
+    public String runQuery(String args[]) {
         setArgs(args).run();
         return getDataAndClear();
     }
@@ -120,6 +122,7 @@ public class SplayQuery {
 
     /**
      * Tell the user which options we support.
+     *
      * @param s The unknown option if not-null.
      */
     public void usage(String s) {
@@ -127,7 +130,7 @@ public class SplayQuery {
             System.err.println("Invalid option " + s);
         }
         System.err.printf("Usage: %s [options] inserts lookups\n",
-                          this.getClass().getName());
+                this.getClass().getName());
         System.err.println("Where options include:");
         System.err.println("\t-c class: Which tree class to use.");
         System.err.println("\t-d: Dryrun; show elaborate biasedness details.");
@@ -143,6 +146,7 @@ public class SplayQuery {
 
     /**
      * Process all commandline arguments and options.
+     *
      * @param args Array of commandline arguments
      * @return The current object.
      */
@@ -173,13 +177,12 @@ public class SplayQuery {
                             String qs[] = args[++i].split("/");
                             topmostQuotient = Double.parseDouble(qs[0]);
                             percentQuotient = Double.parseDouble(qs[1]);
+                        } catch (Exception e) {
                         }
-                        catch (Exception e) {
-                        }
-                        if (topmostQuotient <= 0 || topmostQuotient >= 100 ||
-                            percentQuotient <= 0 || percentQuotient >= 100) {
+                        if (topmostQuotient <= 0 || topmostQuotient >= 100
+                                || percentQuotient <= 0 || percentQuotient >= 100) {
                             System.err.printf("Invalid quotient argument %s\n",
-                                              args[i]);
+                                    args[i]);
                             System.exit(1);
                         } else {
                             useQuotient = true;
@@ -204,14 +207,12 @@ public class SplayQuery {
             if (i < args.length) {
                 usage(args[i]);
             }
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             System.err.printf("Invalid %dth argument: %s\n", i, args[i]);
             System.exit(1);
-        }
-        catch (ArrayIndexOutOfBoundsException ex) {
+        } catch (ArrayIndexOutOfBoundsException ex) {
             System.err.printf("Missing option argument at position %d\n",
-                              i);
+                    i);
             System.exit(1);
         }
 
@@ -238,6 +239,7 @@ public class SplayQuery {
 
     /**
      * Create biases for the ZIPF method according to "ongelijkmatigheid".
+     *
      * @return an array of biases.
      */
     private double[] initZipf() {
@@ -261,6 +263,7 @@ public class SplayQuery {
 
     /**
      * Generate an array of keys and permute them.
+     *
      * @return The array of keys
      */
     private Key[] generateKeys() {
@@ -296,15 +299,14 @@ public class SplayQuery {
             tree.insert(num[i]);
         }
         long endInsertions = System.currentTimeMillis();
-        timer=endInsertions-beginInsertions;
+        insertionTimer = endInsertions - beginInsertions;
 
         /* Again, rearrange all keys randomly. */
         shuffle(num);
 
         if (zipf) {
             runZipf(tree, num, kans);
-        }
-        else if (useQuotient) {
+        } else if (useQuotient) {
             runQuotient(tree, num);
         } else {
             run8020(tree, num);
@@ -313,6 +315,7 @@ public class SplayQuery {
 
     /**
      * Do lookups according to the 80/20 method.
+     *
      * @param tree The tree
      * @param num An array of inserted keys.
      */
@@ -334,11 +337,13 @@ public class SplayQuery {
                 double perc = (double) percent * use[i] / all;
                 cumu += perc;
                 System.err.printf("Van %3d tot %3d %% wordt %10d keren "
-                                  + "= %5.2f %% bezocht, "
-                                  + "cumulatief %6.2f %%.\n",
-                                  i, i + 1, use[i], perc, cumu);
+                        + "= %5.2f %% bezocht, "
+                        + "cumulatief %6.2f %%.\n",
+                        i, i + 1, use[i], perc, cumu);
             }
         } else {
+            System.gc();
+            long beginInsertions = System.currentTimeMillis();
             for (int i = 0; i < lookups; ++i) {
                 double d = rand.nextDouble();
                 d = Math.pow(d, 1.0 / ongelijkmatigheid);
@@ -349,11 +354,14 @@ public class SplayQuery {
                     System.exit(1);
                 }
             }
+            long endInsertions = System.currentTimeMillis();
+            lookupTimer = endInsertions - beginInsertions;
         }
     }
 
     /**
      * Do lookups according to the ZIPF method
+     *
      * @param tree The tree
      * @param num Array of inserted keys
      * @param kans Array of biases.
@@ -375,14 +383,14 @@ public class SplayQuery {
                 double perc = (double) percent * use[i] / all;
                 cumu += perc;
                 System.err.printf("Van %3d tot %3d %% wordt %10d keren "
-                                  + "= %5.2f %% bezocht, "
-                                  + "cumulatief %6.2f %%.\n",
-                                  i, i + 1, use[i], perc, cumu);
+                        + "= %5.2f %% bezocht, "
+                        + "cumulatief %6.2f %%.\n",
+                        i, i + 1, use[i], perc, cumu);
             }
         } else {
             int partSize = partitions > 1
-                           ? (lookups + (partitions - 1)) / partitions
-                           : lookups;
+                    ? (lookups + (partitions - 1)) / partitions
+                    : lookups;
             int shuffleAt = partSize;
             for (int i = 0; i < lookups; ++i) {
                 if (i == shuffleAt) {
@@ -403,6 +411,7 @@ public class SplayQuery {
 
     /**
      * The ZIPF method uses some tricky and misty details.
+     *
      * @param d Unbiased index
      * @param kans Array of chances
      * @param size Number of elements
@@ -430,12 +439,13 @@ public class SplayQuery {
 
     /**
      * Do lookups according to the quotient method.
+     *
      * @param tree The tree
      * @param num An array of inserted keys.
      */
     private void runQuotient(AbstractTree tree, Key[] num) {
         System.err.printf("quotient topmost %6.2f / %6.2f percent lookups\n",
-                          topmostQuotient, percentQuotient);
+                topmostQuotient, percentQuotient);
         if (dryrun) {
             int percent = 100;
             int[] use = new int[percent];
@@ -463,9 +473,9 @@ public class SplayQuery {
                 double perc = (double) percent * use[i] / all;
                 cumu += perc;
                 System.err.printf("Van %3d tot %3d %% wordt %10d keren "
-                                  + "= %5.2f %% bezocht, "
-                                  + "cumulatief %6.2f %%.\n",
-                                  i, i + 1, use[i], perc, cumu);
+                        + "= %5.2f %% bezocht, "
+                        + "cumulatief %6.2f %%.\n",
+                        i, i + 1, use[i], perc, cumu);
             }
         } else {
             for (int i = 0; i < lookups; ++i) {
@@ -489,21 +499,23 @@ public class SplayQuery {
 
     /**
      * Delay the current thread
+     *
      * @param millis The delay time in milliseconds
      */
     public void delay(int millis) {
         try {
             Thread.sleep(millis);
-        }
-        catch (InterruptedException ex) {
+        } catch (InterruptedException ex) {
         }
     }
 
     /**
      * Use the Fisher-Yates shuffle to randomly reorder an array.
+     *
      * @param num An array of Keys.
-     * @see <a href="https://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
-     *      algorithm details</a>.
+     * @see
+     * <a href="https://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
+     * algorithm details</a>.
      */
     public void shuffle(Key[] num) {
         for (int i = 0; i < num.length; ++i) {
@@ -516,10 +528,11 @@ public class SplayQuery {
 
     /**
      * Load a tree class by name.
+     *
      * @param className The name of the class without package prefix.
-     * @return An instance of the specified class.
-     * If this fails to load your class then examine the value of your
-     * CLASSPATH environment variable, or the -cp option to java.
+     * @return An instance of the specified class. If this fails to load your
+     * class then examine the value of your CLASSPATH environment variable, or
+     * the -cp option to java.
      */
     private AbstractTree loadClass(String className) {
         try {
@@ -529,20 +542,19 @@ public class SplayQuery {
             Class myClass = classLoader.loadClass(fullClassName);
             // System.out.println("Instantiating " + myClass.getCanonicalName());
             return (AbstractTree) myClass.newInstance();
-        }
-        catch (ClassNotFoundException |
-               InstantiationException |
-               IllegalAccessException ex) {
+        } catch (ClassNotFoundException |
+                InstantiationException |
+                IllegalAccessException ex) {
             System.err.printf("Failed to load class %s: %s\n",
-                              className, ex.getLocalizedMessage());
+                    className, ex.getLocalizedMessage());
             System.exit(1);
         }
         return null;
     }
 
-    public String getDataAndClear(){
-        String out = ";"+timer+";"+AbstractTree.getInsertions()+";"
-                +AbstractTree.getConstructed()+";"+AbstractTree.getComparisons();
+    public String getDataAndClear() {
+        String out = ";" + insertionTimer + ";" + lookupTimer + ";" + AbstractTree.getInsertions() + ";"
+                + AbstractTree.getConstructed() + ";" + AbstractTree.getComparisons();
         AbstractTree.resetStatistics();
         return out;
     }

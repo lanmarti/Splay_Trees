@@ -21,12 +21,14 @@ public class SemiSplay extends AbstractSplayTree {
     }
 
     public SemiSplay() {
+        super();
     }
 
     /**
      * Clone the given tree.
      */
     private SemiSplay(SemiSplay clone) {
+        super();
         if (clone.getRoot() != null) {
             this.root = clone.getRoot().copy();
         }

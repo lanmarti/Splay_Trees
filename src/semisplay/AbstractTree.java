@@ -86,7 +86,7 @@ public abstract class AbstractTree implements TreeIterable<Key> {
     public abstract TreeIterator<Key> iterator();
 
     /** Maintain some counters for measurement purposes. */
-    private static int insertions, constructed, duplicates,
+    private static long insertions, constructed, duplicates,
                        deletions, notFounds, comparisons;
     /** Reset all counters. */
     public static void resetStatistics() {
@@ -96,21 +96,21 @@ public abstract class AbstractTree implements TreeIterable<Key> {
 
     /** Count how many keys have been inserted. */
     public static void incrInsertions() { ++insertions; }
-    public static int  getInsertions() { return insertions; }
+    public static long  getInsertions() { return insertions; }
     /** Count how often a new Top object has been created. */
     public static void incrConstructed() { ++constructed; }
-    public static int  getConstructed() { return constructed; }
+    public static long  getConstructed() { return constructed; }
     /** Count how many duplicate keys have not been inserted. */
     public static void incrDuplicates() { ++duplicates; }
-    public static int  getDuplicates() { return duplicates; }
+    public static long  getDuplicates() { return duplicates; }
     /** Count how often a top has been deleted. */
     public static void incrDeletions() { ++deletions; }
-    public static int  getDeletions() { return deletions; }
+    public static long  getDeletions() { return deletions; }
     /** Count how often a key lookup or deletion failed .*/
     public static void incrNotFounds() { ++notFounds; }
-    public static int  getNotFounds() { return notFounds; }
+    public static long  getNotFounds() { return notFounds; }
     /** Count how many times we compared two keys .*/
     public static void incrComparisons() { ++comparisons; }
-    public static int  getComparisons() { return comparisons; }
+    public static long getComparisons() { return comparisons; }
 
 }

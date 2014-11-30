@@ -19,6 +19,7 @@ import java.util.List;
 public class Full extends AbstractSplayTree {
 
     public Full() {
+        super();
     }
 
     /**
@@ -34,6 +35,7 @@ public class Full extends AbstractSplayTree {
      * Clone the given tree.
      */
     private Full(Full clone) {
+        super();
         if (clone.getRoot() != null) {
             root = clone.getRoot().copy();
         }
@@ -75,7 +77,12 @@ public class Full extends AbstractSplayTree {
         }
 
         // balance the path
-        Collections.sort(nodes, (Top t1, Top t2) -> t1.compareTo(t2.getKey()));
+        Collections.sort(nodes, new Comparator<Top>() {
+
+            public int compare(Top t1, Top t2) {
+                return t1.compareTo(t2.getKey());
+            }
+        });
         root = balancePath(nodes, leaves);
 
         // add the exterior nodes back to the balanced path
