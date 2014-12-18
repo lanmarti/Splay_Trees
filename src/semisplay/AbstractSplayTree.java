@@ -301,6 +301,7 @@ public abstract class AbstractSplayTree extends AbstractTree {
             }
             incrDeletions();
             splayCounter(path);
+            size--;
             return true;
         } else {
             incrNotFounds();
